@@ -2,69 +2,133 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Sagatama Edu - Pi App</title>
+  <title>Sagatama Edu | Pi Network App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pi SDK (WAJIB) -->
+  <!-- WAJIB: Pi SDK -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: #f4f6f8;
       margin: 0;
+      padding: 0;
     }
     .container {
       max-width: 420px;
-      margin: 50px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       text-align: center;
     }
+    h1 {
+      color: #4b36d1;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #444;
+      font-size: 14px;
+    }
     button {
+      width: 100%;
       background: #6b4eff;
       color: white;
       border: none;
-      padding: 12px 18px;
+      padding: 14px;
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      margin-top: 15px;
     }
-    .hidden { display: none; }
+    button:hover {
+      background: #563de0;
+    }
+    .hidden {
+      display: none;
+    }
+    .card {
+      background: #f7f7ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      text-align: left;
+    }
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888;
+    }
   </style>
 </head>
 
 <body>
+
   <div class="container">
     <h1>📘 Sagatama Edu</h1>
-    <p>Platform Pendidikan IT & AI berbasis Pi Network</p>
+    <p>
+      Aplikasi Pendidikan IT & AI berbasis <b>Pi Network</b><br>
+      untuk santri dan masyarakat.
+    </p>
 
-    <button onclick="loginPi()">Login dengan Pi Network</button>
+    <button id="loginBtn" onclick="loginPi()">
+      Login dengan Pi Network
+    </button>
 
     <div id="userBox" class="hidden">
-      <h3>Selamat datang 👋</h3>
-      <p><b>Username Pi:</b> <span id="username"></span></p>
+      <div class="card">
+        <p class="label">Username Pi:</p>
+        <p id="username"></p>
+
+        <p class="label">Program Pendidikan:</p>
+        <ul>
+          <li>📗 Kelas IT Dasar</li>
+          <li>🤖 Kelas AI untuk Santri</li>
+          <li>🕌 Pendidikan Akhlak & Karakter</li>
+        </ul>
+      </div>
     </div>
+
+    <footer>
+      © 2026 Sagatama Edu · Pi Network Ecosystem
+    </footer>
   </div>
 
   <script>
-    Pi.init({ version: "2.0" });
+    /* ==========================
+       INISIALISASI PI SDK
+       ========================== */
+    Pi.init({
+      version: "2.0",
+      sandbox: true
+    });
 
+    /* ==========================
+       LOGIN PI NETWORK
+       ========================== */
     function loginPi() {
       Pi.authenticate(
         ["username"],
         function (auth) {
+          // sukses login
+          document.getElementById("loginBtn").style.display = "none";
           document.getElementById("userBox").classList.remove("hidden");
           document.getElementById("username").innerText =
             auth.user.username;
         },
         function (error) {
-          alert("Login Pi gagal");
+          alert("Login Pi gagal. Silakan coba lagi.");
           console.error(error);
         }
       );
     }
   </script>
+
 </body>
 </html>
