@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sagatama Edu - Pi App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Pi SDK (WAJIB) -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+    }
+    .container {
+      max-width: 420px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    button {
+      background: #6b4eff;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>📘 Sagatama Edu</h1>
+    <p>Platform Pendidikan IT & AI berbasis Pi Network</p>
+
+    <button onclick="loginPi()">Login dengan Pi Network</button>
+
+    <div id="userBox" class="hidden">
+      <h3>Selamat datang 👋</h3>
+      <p><b>Username Pi:</b> <span id="username"></span></p>
+    </div>
+  </div>
+
+  <script>
+    Pi.init({ version: "2.0" });
+
+    function loginPi() {
+      Pi.authenticate(
+        ["username"],
+        function (auth) {
+          document.getElementById("userBox").classList.remove("hidden");
+          document.getElementById("username").innerText =
+            auth.user.username;
+        },
+        function (error) {
+          alert("Login Pi gagal");
+          console.error(error);
+        }
+      );
+    }
+  </script>
+</body>
+</html>
