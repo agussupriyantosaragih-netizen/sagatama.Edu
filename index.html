@@ -5,7 +5,7 @@
   <title>Sagatama Edu | Pi Network App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- WAJIB: Pi SDK -->
+  <!-- Pi SDK WAJIB -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <style>
@@ -13,52 +13,39 @@
       font-family: Arial, Helvetica, sans-serif;
       background: #f4f6f8;
       margin: 0;
-      padding: 0;
     }
     .container {
       max-width: 420px;
       margin: 40px auto;
-      background: #ffffff;
+      background: #fff;
       padding: 24px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,.08);
       text-align: center;
     }
-    h1 {
-      color: #4b36d1;
-      margin-bottom: 10px;
-    }
-    p {
-      color: #444;
-      font-size: 14px;
-    }
+    h1 { color: #4b36d1; }
+    p { font-size: 14px; color: #444; }
     button {
       width: 100%;
       background: #6b4eff;
-      color: white;
+      color: #fff;
       border: none;
       padding: 14px;
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 15px;
+      margin-top: 12px;
     }
-    button:hover {
-      background: #563de0;
+    button.secondary {
+      background: #2fa44f;
     }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
     .card {
       background: #f7f7ff;
       padding: 15px;
       border-radius: 8px;
       margin-top: 15px;
       text-align: left;
-    }
-    .label {
-      font-weight: bold;
-      color: #333;
     }
     footer {
       margin-top: 20px;
@@ -69,66 +56,103 @@
 </head>
 
 <body>
+<div class="container">
 
-  <div class="container">
-    <h1>📘 Sagatama Edu</h1>
-    <p>
-      Aplikasi Pendidikan IT & AI berbasis <b>Pi Network</b><br>
-      untuk santri dan masyarakat.
-    </p>
+  <h1>📘 Sagatama Edu</h1>
+  <p>
+    Aplikasi Pendidikan IT & AI berbasis <b>Pi Network</b><br>
+    Mendukung pendidikan santri & masyarakat
+  </p>
 
-    <button id="loginBtn" onclick="loginPi()">
-      Login dengan Pi Network
-    </button>
+  <button id="loginBtn" onclick="loginPi()">
+    Login dengan Pi Network
+  </button>
 
-    <div id="userBox" class="hidden">
-      <div class="card">
-        <p class="label">Username Pi:</p>
-        <p id="username"></p>
+  <div id="userBox" class="hidden">
+    <div class="card">
+      <b>Username Pi:</b>
+      <p id="username"></p>
 
-        <p class="label">Program Pendidikan:</p>
-        <ul>
-          <li>📗 Kelas IT Dasar</li>
-          <li>🤖 Kelas AI untuk Santri</li>
-          <li>🕌 Pendidikan Akhlak & Karakter</li>
-        </ul>
-      </div>
+      <b>Program Pendidikan:</b>
+      <ul>
+        <li>📗 Kelas IT Dasar</li>
+        <li>🤖 Kelas AI untuk Santri</li>
+        <li>🕌 Pendidikan Akhlak</li>
+      </ul>
+
+      <hr>
+
+      <b>💰 Donasi Pendidikan (Pi)</b>
+      <p>Dukung pendidikan dengan Pi Network</p>
+
+      <button class="secondary" onclick="donasiPi(1)">Donasi 1 Pi</button>
+      <button class="secondary" onclick="donasiPi(5)">Donasi 5 Pi</button>
     </div>
-
-    <footer>
-      © 2026 Sagatama Edu · Pi Network Ecosystem
-    </footer>
   </div>
 
-  <script>
-    /* ==========================
-       INISIALISASI PI SDK
-       ========================== */
-    Pi.init({
-      version: "2.0",
-      sandbox: true
-    });
+  <footer>
+    © 2026 Sagatama Edu · Pi Network Ecosystem
+  </footer>
 
-    /* ==========================
-       LOGIN PI NETWORK
-       ========================== */
-    function loginPi() {
-      Pi.authenticate(
-        ["username"],
-        function (auth) {
-          // sukses login
-          document.getElementById("loginBtn").style.display = "none";
-          document.getElementById("userBox").classList.remove("hidden");
-          document.getElementById("username").innerText =
-            auth.user.username;
-        },
-        function (error) {
-          alert("Login Pi gagal. Silakan coba lagi.");
-          console.error(error);
-        }
-      );
+</div>
+
+<script>
+/* =====================
+   INIT PI SDK
+===================== */
+Pi.init({
+  version: "2.0",
+  sandbox: true   // WAJIB true saat review
+});
+
+/* =====================
+   LOGIN PI
+===================== */
+function loginPi() {
+  Pi.authenticate(
+    ["username", "payments"],
+    function(auth) {
+      document.getElementById("loginBtn").style.display = "none";
+      document.getElementById("userBox").classList.remove("hidden");
+      document.getElementById("username").innerText =
+        auth.user.username;
+    },
+    function(error) {
+      alert("Login Pi gagal");
+      console.error(error);
     }
-  </script>
+  );
+}
+
+/* =====================
+   DONASI PI (TESTNET)
+===================== */
+function donasiPi(jumlah) {
+  const paymentData = {
+    amount: jumlah,
+    memo: "Donasi Pendidikan Sagatama Edu",
+    metadata: { program: "pendidikan" }
+  };
+
+  Pi.createPayment(paymentData, {
+    onReadyForServerApproval: function(paymentId) {
+      console.log("Menunggu approval server:", paymentId);
+      // nanti bisa dikirim ke backend
+    },
+    onReadyForServerCompletion: function(paymentId, txid) {
+      alert("Terima kasih 🙏 Donasi Pi berhasil");
+      console.log("Payment selesai:", paymentId, txid);
+    },
+    onCancel: function(paymentId) {
+      alert("Donasi dibatalkan");
+    },
+    onError: function(error, payment) {
+      alert("Terjadi kesalahan pembayaran");
+      console.error(error, payment);
+    }
+  });
+}
+</script>
 
 </body>
 </html>
